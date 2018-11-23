@@ -5,7 +5,7 @@ Basic script and functions for evaluating a detection algorithm on MEArec ground
 
 - Install all depedencies (spikeextractors, numpy, h5py, ast, scipy).
 
-- Use notebook to run basic detection example and its evaluation (specify the MEArec data path).
+- Use notebook to run and evaluate a basic detection example (specify the MEArec data path).
 
 - Create, run, and evaluate your own detection algorithm.
 
