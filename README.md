@@ -13,6 +13,6 @@ Basic script and functions for evaluating a detection algorithm on MEArec ground
 
 [Cole Hurwitz](https://www.inf.ed.ac.uk/people/students/Cole_Hurwitz.html) - The Institute for Adaptive and Neural Computation (ANC), University of Edinburgh, Edinburgh, Scotland 
 
-## Citations
+## Important Packages
 
 [MEArec](https://github.com/alejoe91/MEArec): Fast and customizable software for simulating extracellular recordings on multi-electrode arrays (MEAs).
