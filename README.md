@@ -15,4 +15,4 @@ Basic script and functions for evaluating a detection algorithm on MEArec ground
 
 ## Citations
 
-[MEArec](https://github.com/alejoe91/MEArec) Fast and customizable software for simulating extracellular recordings on multi-electrode arrays (MEAs). Author: Alessio Buccino
+[MEArec](https://github.com/alejoe91/MEArec): Fast and customizable software for simulating extracellular recordings on multi-electrode arrays (MEAs). Author: Alessio Buccino
