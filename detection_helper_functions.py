@@ -5,7 +5,7 @@ import collections
 Spike = collections.namedtuple('Spike', 'channel time amp')
 
 
-def getSortedDetectionInfo(sorting):
+def get_sorted_detection_info(sorting):
     '''Returns all detection times and units for a given sorting extractor
        Parameters
        ----------
@@ -20,8 +20,8 @@ def getSortedDetectionInfo(sorting):
     '''
     firing_neurons = []
     firing_times = []
-    for unit_id in sorting.getUnitIds():
-        spike_train = sorting.getUnitSpikeTrain(unit_id)
+    for unit_id in sorting.get_unit_ids():
+        spike_train = sorting.get_unit_spike_train(unit_id)
         for spike_time in spike_train:
             firing_neurons.append(unit_id)
             firing_times.append(spike_time)
@@ -31,7 +31,7 @@ def getSortedDetectionInfo(sorting):
     firing_times = np.sort(firing_times)
     return firing_times, firing_neurons
 
-def runThresholdDetection(channel_ids, start_frame, end_frame, threshold, refractory_period, duplicate_radius, dist_matrix, recording):
+def run_threshold_detection(channel_ids, start_frame, end_frame, threshold, refractory_period, duplicate_radius, dist_matrix, recording):
     '''A basic threshold crossing detection algorithm
        Parameters
        ----------
@@ -62,7 +62,7 @@ def runThresholdDetection(channel_ids, start_frame, end_frame, threshold, refrac
     detected_channels = []
     channel_peak_amps = []
     for channel_id in channel_ids:
-        peaks, peak_amps = find_peaks(-recording.getTraces(channel_ids=[channel_id], start_frame=start_frame, end_frame=end_frame)[0], 
+        peaks, peak_amps = find_peaks(recording.get_traces(channel_ids=[channel_id], start_frame=start_frame, end_frame=end_frame)[0], 
                                       height=threshold, 
                                       distance=refractory_period, 
                                       prominence=None, 
@@ -89,7 +89,7 @@ def runThresholdDetection(channel_ids, start_frame, end_frame, threshold, refrac
         peak_amp = channel_peak_amps[i]
         if(len(stored_spikes) != 0):
             while(spike_time - stored_spikes[0][1] > refractory_period):
-                stored_spikes, final_spikes = processStoredSpikes(stored_spikes, dist_matrix, duplicate_radius, final_spikes)
+                stored_spikes, final_spikes = process_stored_spikes(stored_spikes, dist_matrix, duplicate_radius, final_spikes)
                 if(len(stored_spikes) == 0):
                     break
         stored_spikes.append(Spike(detected_channel, spike_time, peak_amp))
@@ -102,7 +102,7 @@ def runThresholdDetection(channel_ids, start_frame, end_frame, threshold, refrac
         
     return np.asarray(detected_firing_times), np.asarray(detected_channels)
 
-def processStoredSpikes(stored_spikes, dist_matrix, duplicate_radius, final_spikes):
+def process_stored_spikes(stored_spikes, dist_matrix, duplicate_radius, final_spikes):
     '''Helper function for threshold detection method. Used to filter duplicate events from stored_spikes and return true events
        Parameters
        ----------
@@ -137,7 +137,7 @@ def processStoredSpikes(stored_spikes, dist_matrix, duplicate_radius, final_spik
     final_spikes.append(curr_max_spike)
     return new_stored_spikes, final_spikes
 
-def evaluateDetection(detected_firing_times, detected_channels, firing_times, firing_neurons, channel_positions, 
+def evaluate_detection(detected_firing_times, detected_channels, firing_times, firing_neurons, channel_positions, 
                       neuron_locs, max_neuron_channel_dist, jitter=10):
     '''Function to return results of detection algorithm. Matches detected events to ground truth and returns all matched events,
        all unmatched detections, and all unmatched ground truth firings (true positives, false positives, and false negatives,
@@ -177,13 +177,11 @@ def evaluateDetection(detected_firing_times, detected_channels, firing_times, fi
     for i, detected_time in enumerate(detected_firing_times):
         detected_channel = detected_channels[i]
         candidate_events = []
-        times_to_be_deleted = []
-        neurons_to_be_deleted = []
         for j, firing_time in enumerate(copy_firing_times):
             firing_neuron = copy_firing_neurons[j]
             if(detected_time >= firing_time - jitter):
                 if(detected_time <= firing_time + jitter):
-                    dist_to_neuron = getDist(channel_positions[detected_channel], neuron_locs[firing_neuron])
+                    dist_to_neuron = get_dist(channel_positions[detected_channel], neuron_locs[firing_neuron])
                     if(dist_to_neuron < max_neuron_channel_dist):
                         candidate_events.append((j, dist_to_neuron, detected_channel, firing_time))
             else:
@@ -209,7 +207,7 @@ def evaluateDetection(detected_firing_times, detected_channels, firing_times, fi
     unmatched_firings = list(zip(copy_firing_times, copy_firing_neurons))                
     return matched_events, unmatched_detections, unmatched_firings
     
-def getNClosestPositions(N, point, positions):
+def get_n_closest_positions(N, point, positions):
     '''Returns N closest position ids to the given point from the positions array
        Parameters
        ----------
@@ -232,7 +230,7 @@ def getNClosestPositions(N, point, positions):
     return N_closest_position_ids, N_closest_dists
 
     
-def getDist(point1, point2):
+def get_dist(point1, point2):
     '''Returns euclidean distance between two points
        Parameters
        ----------
